@@ -30,7 +30,8 @@ namespace Immense.RemoteControl.Desktop.Windows
             Action<IRemoteControlClientBuilder> clientConfig,
             Action<IServiceCollection>? serviceConfig = null,
             Func<IServiceProvider, Task>? startupConfig = null,
-            string serverUri = "")
+            string serverUri = "",
+            string sessionId = "")
         {
             var services = new ServiceCollection();
 
@@ -42,7 +43,7 @@ namespace Immense.RemoteControl.Desktop.Windows
 
             serviceConfig?.Invoke(services);
 
-            return await services.BuildRemoteControlServiceProvider(args, clientConfig, AddWindowsServices, startupConfig, serverUri);
+            return await services.BuildRemoteControlServiceProvider(args, clientConfig, AddWindowsServices, startupConfig, serverUri, sessionId);
         }
 
 

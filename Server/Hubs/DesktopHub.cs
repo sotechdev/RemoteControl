@@ -1,4 +1,4 @@
-﻿using Immense.RemoteControl.Server.Abstractions;
+using Immense.RemoteControl.Server.Abstractions;
 using Immense.RemoteControl.Server.Models;
 using Immense.RemoteControl.Server.Services;
 using Immense.RemoteControl.Shared;
@@ -106,7 +106,7 @@ namespace Immense.RemoteControl.Server.Hubs
                 _logger.LogError("Connection not found in cache.");
                 return;
             }
-
+                       ///RemoteControl/Viewer?mode=Unattended&sessionId=00000000-0000-0000-0000-000000000000&accessKey=&viewonly=False
             var accessLink = $"/RemoteControl/Viewer?mode=Unattended&sessionId={session.UnattendedSessionId}&accessKey={session.AccessKey}&viewonly=False";
             await _hubEvents.NotifyUnattendedSessionReady(session, accessLink);
         }

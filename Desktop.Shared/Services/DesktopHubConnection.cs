@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Immense.RemoteControl.Desktop.Shared.Abstractions;
 using Immense.RemoteControl.Desktop.Shared.Messages;
 using Immense.RemoteControl.Shared;
@@ -107,7 +107,7 @@ namespace Immense.RemoteControl.Desktop.Shared.Services
                     }
                     catch (HttpRequestException ex)
                     {
-                        _logger.LogWarning("Failed to connect to server.  Status Code: {code}", ex.StatusCode);
+                        _logger.LogWarning($"Failed to connect to {this.Endpoint}.  Status Code: {ex.StatusCode} {ex.Message}");
                     }
                     catch (Exception ex)
                     {
@@ -306,14 +306,14 @@ namespace Immense.RemoteControl.Desktop.Shared.Services
 
             });
         }
-
+    public Uri Endpoint => new Uri($"{_appState.Host.Trim().TrimEnd('/')}/hubs/desktop");
         private HubConnection BuildConnection()
         {
             using var scope = _scopeFactory.CreateScope();
             var builder = scope.ServiceProvider.GetRequiredService<IHubConnectionBuilder>();
 
             var connection = builder
-                .WithUrl($"{_appState.Host.Trim().TrimEnd('/')}/hubs/desktop")
+                .WithUrl(Endpoint)
                 .AddMessagePackProtocol()
                 .WithAutomaticReconnect(new RetryPolicy())
                 .Build();

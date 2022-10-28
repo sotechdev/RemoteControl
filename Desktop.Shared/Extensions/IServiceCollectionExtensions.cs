@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Immense.RemoteControl.Desktop.Shared.Abstractions;
 using Immense.RemoteControl.Desktop.Shared.Enums;
 using Immense.RemoteControl.Desktop.Shared.Services;
@@ -35,7 +35,8 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
             Action<IRemoteControlClientBuilder> clientConfig,
             Action<IServiceCollection> platformServicesConfig,
             Func<IServiceProvider, Task>? startupConfig = null,
-            string serverUri = "")
+            string serverUri = "",
+            string sessionId = "")
         {
             var builder = new RemoteControlClientBuilder(services);
             clientConfig.Invoke(builder);
@@ -54,11 +55,11 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
                 "              in the console session with elevated rights.");
 
             var hostOption = new Option<string>(
-                new[] { "-h", "--host" },
+                new[] { "-h", "--host", "--BackendAddress" },
                 "The hostname of the server to which to connect (e.g. https://example.com).");
             if (string.IsNullOrWhiteSpace(serverUri))
             {
-                hostOption.IsRequired = true;
+                hostOption.IsRequired = true;                
             }
             rootCommand.AddOption(hostOption);
 
@@ -83,7 +84,7 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
             rootCommand.AddOption(pipeNameOption);
 
             var sessionIdOption = new Option<string>(
-               new[] { "-s", "--session-id" },
+               new[] { "-s", "--session-id", "--SessionID" },
                "In Unattended mode, this unique session ID will be assigned to this connection and " +
                "shared with the server.  The connection can then be found in the DesktopHubSessionCache " +
                "using this ID.");
@@ -109,7 +110,7 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
                     host,
                     mode,
                     pipeName,
-                    sessionId,
+                    cliSessionId,
                     accessKey,
                     requesterName,
                     organizationName) =>
@@ -119,7 +120,7 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
                     {
                         host = serverUri;
                     }
-
+                    
                     services.AddSingleton<IAppState>(s =>
                     {
                         var messenger = s.GetRequiredService<IMessenger>();
@@ -172,6 +173,7 @@ namespace Immense.RemoteControl.Desktop.Shared.Extensions
             }
 
             var appStartup = provider.GetRequiredService<IAppStartup>();
+            // Entry Point
             await appStartup.Initialize();
             return provider;
         }

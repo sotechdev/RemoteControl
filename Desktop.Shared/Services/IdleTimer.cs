@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Timers;
@@ -51,8 +51,8 @@ namespace Immense.RemoteControl.Desktop.Shared.Services
             }
             else if (DateTimeOffset.Now - ViewersLastSeen > TimeSpan.FromSeconds(30))
             {
-                _logger.LogWarning("No viewers connected after 30 seconds.  Shutting down.");
-                Environment.Exit(0);
+                //_logger.LogWarning("No viewers connected after 30 seconds.  Shutting down.");
+                //Environment.Exit(0);
             }
         }
     }

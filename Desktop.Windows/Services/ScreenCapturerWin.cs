@@ -54,7 +54,6 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
 
         private SKBitmap? _currentFrame;
         private SKBitmap? _previousFrame;
-        private bool _needsInit;
 
         public ScreenCapturerWin(
             IImageHelper imageHelper,
@@ -72,6 +71,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
 
         public bool CaptureFullscreen { get; set; } = true;
         public Rectangle CurrentScreenBounds { get; private set; } = Screen.PrimaryScreen.Bounds;
+        public bool NeedsInit { get; set; } = true;
         public string SelectedScreen { get; private set; } = Screen.PrimaryScreen.DeviceName;
         public void Dispose()
         {
@@ -124,7 +124,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
                         return Result.Fail<SKBitmap>($"Failed to switch to input desktop. Last Win32 error code: {errCode}");
                     }
 
-                    if (_needsInit)
+                    if (NeedsInit)
                     {
                         _logger.LogWarning("Init needed in GetNextFrame.");
                         Init();
@@ -151,7 +151,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
                 catch (Exception e)
                 {
                     _logger.LogError(e, "Error while getting next frame.");
-                    _needsInit = true;
+                    NeedsInit = true;
                     return Result.Fail<SKBitmap>(e);
                 }
             }
@@ -186,7 +186,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
 
             ScreenChanged?.Invoke(this, CurrentScreenBounds);
 
-            _needsInit = false;
+            NeedsInit = false;
         }
 
         public void SetSelectedScreen(string displayName)
@@ -224,7 +224,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Capturer error in BitBltCapture.");
-                _needsInit = true;
+                NeedsInit = true;
                 return Result.Fail<SKBitmap>("Error while capturing BitBlt frame.");
             }
         }
@@ -439,7 +439,7 @@ namespace Immense.RemoteControl.Desktop.Windows.Services
         {
             CurrentScreenBounds = Screen.AllScreens[_bitBltScreens[SelectedScreen]].Bounds;
             CaptureFullscreen = true;
-            _needsInit = true;
+            NeedsInit = true;
             ScreenChanged?.Invoke(this, CurrentScreenBounds);
         }
 

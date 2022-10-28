@@ -1,4 +1,4 @@
-﻿using Immense.RemoteControl.Desktop.UI.WPF.Views;
+using Immense.RemoteControl.Desktop.UI.WPF.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

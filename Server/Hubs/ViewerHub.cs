@@ -1,4 +1,4 @@
-﻿using Immense.RemoteControl.Server.Abstractions;
+using Immense.RemoteControl.Server.Abstractions;
 using Immense.RemoteControl.Server.Filters;
 using Immense.RemoteControl.Server.Models;
 using Immense.RemoteControl.Server.Services;
@@ -154,19 +154,19 @@ namespace Immense.RemoteControl.Server.Hubs
                 return;
             }
 
-            if (session.Mode == RemoteControlMode.Unattended &&
-                accessKey != session.AccessKey)
-            {
-                _logger.LogError("Access key does not match for unattended session.  " +
-                    "Session ID: {sessionId}.  " +
-                    "Requester Name: {requesterName}.  " +
-                    "Requester Connection ID: {connectionId}",
-                    sessionId,
-                    requesterName,
-                    Context.ConnectionId);
-                await Clients.Caller.SendAsync("Unauthorized");
-                return;
-            }
+            //if (session.Mode == RemoteControlMode.Unattended &&
+            //    accessKey != session.AccessKey)
+            //{
+            //    _logger.LogError("Access key does not match for unattended session.  " +
+            //        "Session ID: {sessionId}.  " +
+            //        "Requester Name: {requesterName}.  " +
+            //        "Requester Connection ID: {connectionId}",
+            //        sessionId,
+            //        requesterName,
+            //        Context.ConnectionId);
+            //    await Clients.Caller.SendAsync("Unauthorized");
+            //    return;
+            //}
 
             SessionInfo = session;
             SessionInfo.ViewerList.Add(Context.ConnectionId);

@@ -1,4 +1,4 @@
-﻿using Immense.RemoteControl.Server.Abstractions;
+using Immense.RemoteControl.Server.Abstractions;
 using Immense.RemoteControl.Server.Models;
 using Immense.RemoteControl.Server.Services;
 using Immense.RemoteControl.Shared;
@@ -136,7 +136,7 @@ namespace Immense.RemoteControl.Server.Hubs
             }
             else if (SessionInfo.Mode == RemoteControlMode.Unattended)
             {
-                _sessionCache.Sessions.TryRemove(SessionInfo.UnattendedSessionId, out _);
+                _sessionCache.Sessions.TryRemove(SessionInfo.UnattendedSessionId, out var session);
                 if (ViewerList.Count > 0)
                 {
                     await _viewerHub.Clients.Clients(ViewerList).SendAsync("Reconnecting");
